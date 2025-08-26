@@ -1,0 +1,65 @@
+import { groq } from 'next-sanity';
+
+export const hybridsPageQuery = groq`
+*[_type == "hybridsPage"][0]{
+  heroSection{
+    title,
+    subtitle,
+    backgroundImage{
+      ...,
+      asset->{
+        ...
+      }
+    },
+    icon{
+      ...,
+      asset->{
+        ...
+      }
+    }
+  },
+  whatSection{
+    title,
+    image{
+      ...,
+      asset->{
+        ...
+      }
+    },
+    content[]
+  },
+  benefits[]{
+    title,
+    description,
+    icon{
+      ...,
+      asset->{
+        ...
+      }
+    }
+  },
+  savingSection{
+    backgroundImage{
+      ...,
+      asset->{
+        ...
+      }
+    },
+    text
+  },
+  newsSection{
+    title,
+    news[]->{
+      headerTitle,    
+      subTitle,
+      slug,
+      headerImage{
+        ...,
+        asset->{
+          ...
+        }
+      }
+    }
+  }
+}
+`;

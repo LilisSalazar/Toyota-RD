@@ -1,0 +1,52 @@
+import { groq } from 'next-sanity';
+
+export const vehicleComparatorQuery = groq`
+*[_type == "vehicleComparatorPage"][0] {
+  heroBanner{
+    ...,
+    asset->{
+      ...
+    }
+  },
+  title,
+  detailTitle,
+  modelLeft[]{
+    carName,
+    modelLeftImg{
+      ...,
+      asset->{
+        ...
+      }
+    },
+    categoryLeftTitle,
+    hoopsLeft,
+    bluetoothLeft,
+    airBagsLeft,
+    insideLeft,
+    keyLeft,
+    motorLeft,
+    tiresLeft,
+    passengersLeft,
+    audioSystemLeft
+  },
+  modelRight[]{
+    carName,
+    modelRightImg{
+      ...,
+      asset->{
+        ...
+      }
+    },
+    categoryRightTitle,
+    hoopsRight,
+    bluetoothRight,
+    airBagsRight,
+    insideRight,
+    keyRight,
+    motorRight,
+    tiresRight,
+    passengersRight,
+    audioSystemRight
+  }
+}
+`;

@@ -1,0 +1,71 @@
+Fix para el error de carga de imágenes exteriores en LandingModelsPage.tsx
+
+Problema:
+- Error: "Cannot read properties of null (reading '_ref')"
+- Algunas imágenes en galleryImagesOutside tenían asset: null y _upload property
+- Estructura del objeto problemático:
+{
+  _type: 'image',
+  _key: 'string',
+  asset: null,
+  _upload: {...}
+}
+
+Solución:
+1. Importar el tipo correcto de Sanity:
+```tsx
+import { getImageDimensions, type SanityImageSource } from '@sanity/asset-utils';
+```
+
+2. Implementar una función segura para procesar URLs de imágenes:
+```tsx
+const safeUrlForImage = (item: SanityImageSource) => {
+  try {
+    if (!item) return '';
+    // Check if the item is a Sanity image object with _upload
+    if (typeof item === 'object' && '_upload' in item && 'asset' in item && !item.asset) return '';
+    const url = urlForImage(item);
+    return url || '';
+  } catch (error) {
+    console.error('Error processing image:', item, error);
+    return '';
+  }
+};
+```
+
+3. Implementar filtrado seguro en el carrusel:
+```tsx
+{galleryImagesOutside?.filter((item: SanityImageSource) => {
+  if (!item) return false;
+  // Check if the item is a Sanity image object with _upload
+  if (typeof item === 'object' && '_upload' in item && 'asset' in item && !item.asset) return false;
+  return true;
+})?.map((item, index) => {
+  const galleryImageSanity = safeUrlForImage(item);
+  return galleryImageSanity ? (
+    <Image
+      key={index}
+      src={galleryImageSanity}
+      alt={`Slide image ${index + 1}`}
+      className="object-contain"
+      width={1920}
+      height={955}
+    />
+  ) : null;
+})}
+```
+
+Esta solución:
+- Usa el tipo correcto de Sanity (SanityImageSource)
+- Maneja de forma segura las imágenes en estado de subida pendiente
+- Previene errores de null/undefined
+- Solo procesa y muestra imágenes válidas
+- Es type-safe (no genera errores de TypeScript)
+- No rompe la aplicación cuando hay imágenes inválidas
+- Mantiene la funcionalidad del carrusel para imágenes válidas
+
+Notas adicionales:
+- La solución utiliza type guards de TypeScript para verificaciones seguras
+- El uso de `typeof` y `in` asegura que las propiedades existan antes de accederlas
+- El retorno de null en el map evita renderizar elementos vacíos
+- La función safeUrlForImage centraliza la lógica de procesamiento de URLs 
