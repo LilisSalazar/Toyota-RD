@@ -75,6 +75,9 @@ const Footer: React.FC<{ data: FooterProps | null }> = ({ data }) => {
           </div>
         </div>
         <div className="mt-16 border-t border-white pt-8 sm:mt-20 xl:mt-12 2xl:mt-24 2xl:pt-16">
+          <div className="flex justify-center mb-4">
+              <img src="/uaf/UAF.jpeg" alt="Logo UAF" className="h-[80px] w-auto" />
+          </div>
           <p className="text-center leading-5 text-white">{data?.copyrightText}</p>
         </div>
       </div>
